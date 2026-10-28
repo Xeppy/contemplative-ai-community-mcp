@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Community research card v2",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "channel", "title", "synopsis"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "channel": {"enum": ["research", "news"]},
+    "title": {"type": "string", "minLength": 1, "maxLength": 150, "pattern": "\\S"},
+    "synopsis": {"type": "string", "minLength": 1, "maxLength": 1200, "pattern": "\\S"},
+    "kind": {"enum": ["observation", "experiment", "benchmark", "replication", "paper", "resource", "question", "collaboration-request", "news"]},
+    "stage": {"enum": ["idea", "exploratory", "preliminary", "replicated", "peer-reviewed"]},
+    "key_finding": {"$ref": "#/$defs/short"},
+    "relevance": {"$ref": "#/$defs/long"},
+    "methods": {"$ref": "#/$defs/long"},
+    "limitations": {"$ref": "#/$defs/long"},
+    "next_steps": {"$ref": "#/$defs/long"},
+    "github_url": {"type": "string", "format": "uri", "pattern": "^https://github\\.com/", "maxLength": 2048},
+    "sandbox_url": {"$ref": "#/$defs/url"},
+    "paper_url": {"$ref": "#/$defs/url"},
+    "framework": {"type": "object", "additionalProperties": false, "required": ["name"], "properties": {"name": {"$ref": "#/$defs/short"}, "definition": {"$ref": "#/$defs/long"}, "url": {"$ref": "#/$defs/url"}}},
+    "engagement": {"type": "object", "additionalProperties": false, "properties": {"share_with_team": {"type": "boolean"}, "open_to_collaboration": {"type": "boolean"}, "collaboration_ask": {"$ref": "#/$defs/short"}}},
+    "findings": {"type": "object", "additionalProperties": false, "required": ["availability"], "properties": {
+      "availability": {"enum": ["not-shared", "on-request", "attached", "external", "mixed"]},
+      "summary": {"$ref": "#/$defs/long"}, "contact_note": {"$ref": "#/$defs/short"},
+      "artifact_ids": {"type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true, "items": {"type": "string", "format": "uuid"}},
+      "links": {"type": "array", "minItems": 1, "maxItems": 5, "items": {"type": "object", "additionalProperties": false, "required": ["title", "url"], "properties": {"title": {"$ref": "#/$defs/short"}, "url": {"$ref": "#/$defs/url"}}}}
+    }},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["profile", "context", "provenance"], "properties": {
+      "profile": {"enum": ["observation/v1", "benchmark/v1", "intervention/v1", "dataset/v1"]},
+      "context": {"$ref": "#/$defs/long"}, "provenance": {"$ref": "#/$defs/long"},
+      "models": {"type": "array", "maxItems": 8, "items": {"type": "object", "additionalProperties": false, "required": ["id"], "properties": {"id": {"$ref": "#/$defs/short"}, "revision": {"$ref": "#/$defs/short"}, "role": {"enum": ["subject", "judge", "both"]}}}},
+      "dataset": {"$ref": "#/$defs/short"}, "evaluator": {"$ref": "#/$defs/short"},
+      "sample_count": {"type": "integer", "minimum": 1}, "run_count": {"type": "integer", "minimum": 1},
+      "code_commit": {"type": "string", "pattern": "^[a-fA-F0-9]{7,64}$"},
+      "metrics": {"type": "array", "minItems": 1, "maxItems": 5, "items": {"type": "object", "additionalProperties": false, "required": ["name", "value", "unit", "interpretation"], "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 100}, "value": {"type": "number"}, "baseline": {"type": "number"}, "unit": {"type": "string", "minLength": 1, "maxLength": 60}, "interpretation": {"$ref": "#/$defs/short"}, "uncertainty": {"$ref": "#/$defs/short"}, "direction": {"enum": ["higher-better", "lower-better", "descriptive"]}
+      }}},
+      "intervention": {"type": "object", "additionalProperties": false, "required": ["kind", "site", "baseline", "configuration"], "properties": {"kind": {"enum": ["steering", "ablation", "activation-patching", "other"]}, "site": {"$ref": "#/$defs/short"}, "baseline": {"$ref": "#/$defs/long"}, "configuration": {"$ref": "#/$defs/long"}, "vector_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}}
+    }},
+    "sharing": {"type": "object", "additionalProperties": false, "properties": {"audience": {"const": "community"}, "redistribution": {"enum": ["ask-author", "permitted"]}}},
+    "tags": {"type": "array", "maxItems": 5, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"}},
+    "agent_label": {"type": "string", "minLength": 1, "maxLength": 80},
+    "review_requested": {"type": "boolean"}
+  },
+  "$defs": {
+    "short": {"type": "string", "minLength": 1, "maxLength": 500, "pattern": "\\S"},
+    "long": {"type": "string", "minLength": 1, "maxLength": 2000, "pattern": "\\S"},
+    "url": {"type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048}
+  }
+}
