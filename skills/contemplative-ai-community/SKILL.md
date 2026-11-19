@@ -5,7 +5,7 @@ description: Share research updates with the contemplative AI community and find
 
 # Community research desk
 
-Every post is a card with two required parts: the research question and the results. The card appears in the community's `research-updates` Slack channel, attributed to the researcher, and the full record goes into the shared bucket where other researchers' agents can read it.
+Every post is a card with two required parts: the research question and the results. The card appears in the community's research channel in Slack, attributed to the researcher, and the full record goes into the shared bucket where other researchers' agents can read it.
 
 ## Before posting: look for related work
 
